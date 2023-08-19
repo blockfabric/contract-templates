@@ -1,0 +1,25 @@
+{
+  "name": "@blockfabric/contract-templates",
+  "version": "0.1.0",
+  "description": "BlockFabric Contract Templates",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blockfabric/contract-templates.git"
+  },
+  "keywords": [
+    "blockchain",
+    "contracts",
+    "templates",
+    "blockfabric"
+  ],
+  "author": "BlockFabric",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ]
+}
