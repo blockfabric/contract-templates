@@ -1,8 +1,10 @@
-import { Template, TemplateInputTypes } from '../types/template';
+import { Template } from '../types/template';
 import OpenZeppelinERC721 from '../dependencies/@openzeppelin/contracts/token/ERC721/ERC721';
 import OpenZeppelinIERC721Receiver from '../dependencies/@openzeppelin/contracts/token/ERC721/IERC721Receiver';
 import OpenZeppelinIERC721 from '../dependencies/@openzeppelin/contracts/token/ERC721/IERC721';
 import OpenZeppelinIERC721Metadata from '../dependencies/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata';
+import OpenZeppelinERC721Enumerable from '../dependencies/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable';
+import OpenZeppelinIERC721Enumerable from '../dependencies/@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable';
 import OpenZeppelinAddress from '../dependencies/@openzeppelin/contracts/utils/Address';
 import OpenZeppelinContext from '../dependencies/@openzeppelin/contracts/utils/Context';
 import OpenZeppelinStrings from '../dependencies/@openzeppelin/contracts/utils/Strings';
@@ -18,9 +20,12 @@ export const CODE: string = `
 pragma solidity 0.8.18;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract {{contractName}} is ERC721 {
+contract {{contractName}} is ERC721, ERC721Enumerable, Ownable {
     string private _baseTokenURI;
+    uint256 private _tokenIdCounter;
 
     constructor(string memory baseTokenURI) ERC721("{{tokenName}}", "{{symbol}}") {
         _baseTokenURI = baseTokenURI;
@@ -28,6 +33,35 @@ contract {{contractName}} is ERC721 {
 
     function _baseURI() internal view virtual override returns (string memory) {
         return _baseTokenURI;
+    }
+
+    function _beforeTokenTransfer(address from, address to, uint256 firstTokenId, uint256 batchSize)
+        internal
+        virtual
+        override(ERC721, ERC721Enumerable)
+    {
+        super._beforeTokenTransfer(from, to, firstTokenId, batchSize);
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(ERC721, ERC721Enumerable)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+
+    // Public function to expose the base URI
+    function baseURI() public view returns (string memory) {
+        return _baseTokenURI;
+    }
+
+    // Minting function restricted to the owner
+    function mint() public onlyOwner {
+        _mint(msg.sender, _tokenIdCounter);
+        _tokenIdCounter++;
     }
 }
 `;
@@ -57,14 +91,6 @@ export const TEMPLATE: Template = {
       required: true,
     },
   ],
-  constructorInputs: [
-    {
-      key: 'baseTokenURI',
-      label: 'Base Token URI',
-      description: 'The base URL that will hold the NFT media files.',
-      inputType: TemplateInputTypes.StorageFolderUri,
-    }
-  ],
   dependencies: [
     {
       path: '@openzeppelin/contracts/access/Ownable.sol',
@@ -85,6 +111,14 @@ export const TEMPLATE: Template = {
     {
       path: '@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol',
       fileContent: OpenZeppelinIERC721Metadata,
+    },
+    {
+      path: '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol',
+      fileContent: OpenZeppelinERC721Enumerable,
+    },
+    {
+      path: '@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol',
+      fileContent: OpenZeppelinIERC721Enumerable,
     },
     {
       path: '@openzeppelin/contracts/utils/Address.sol',
