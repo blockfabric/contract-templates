@@ -1,0 +1,32 @@
+export interface Template {
+  templateId: string;
+  name: string;
+  description?: string;
+  tags?: string[];
+  code?: string;
+  inputs?: TemplateInput[];
+  constructorInputs?: TemplateInput[];
+  dependencies?: TemplateDependencies[];
+  createdBy?: string;
+  createdDateUTC?: number;
+}
+
+export interface TemplateInput {
+  key?: string;
+  label?: string;
+  description?: string;
+  dataType?: string;
+  defaultValue?: string;
+  required?: boolean;
+  inputType?: TemplateInputTypes;
+}
+
+export interface TemplateDependencies {
+  path?: string;
+  fileContent?: string;
+}
+
+export enum TemplateInputTypes {
+  Default,
+  StorageFolderUri,
+}
