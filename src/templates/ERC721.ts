@@ -1,4 +1,4 @@
-import { Template } from '../types/template';
+import { Template, TemplateInputTypes } from '../types/template';
 import OpenZeppelinERC721 from '../dependencies/@openzeppelin/contracts/token/ERC721/ERC721';
 import OpenZeppelinIERC721Receiver from '../dependencies/@openzeppelin/contracts/token/ERC721/IERC721Receiver';
 import OpenZeppelinIERC721 from '../dependencies/@openzeppelin/contracts/token/ERC721/IERC721';
@@ -89,6 +89,17 @@ export const TEMPLATE: Template = {
       dataType: 'string',
       defaultValue: '',
       required: true,
+    },
+  ],
+  constructorInputs: [
+    {
+      key: 'baseTokenURI',
+      label: 'Base Token URI',
+      description: 'Enter th path for the base token URI',
+      dataType: 'string',
+      defaultValue: '',
+      required: true,
+      inputType: TemplateInputTypes.StorageFolderUri
     },
   ],
   dependencies: [
