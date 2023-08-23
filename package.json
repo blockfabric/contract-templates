@@ -1,6 +1,6 @@
 {
   "name": "@blockfabric/contract-templates",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "BlockFabric Contract Templates",
   "main": "dist/index.js",
   "scripts": {
